@@ -102,6 +102,12 @@ np.count_nonzero(overlap > 1)
 ```
 
 ### Day 6
+`defaultdict` can be useful for counting (amongst other useful things)
+```python
+ages = defaultdict(int)
+for f in fish:
+    ages[f] += 1
+```
 
 ### Day 7
 
