@@ -110,6 +110,11 @@ for f in fish:
 ```
 
 ### Day 7
+The `statistics` module has a lot of handy functions, like median.
+```python
+median = int(statistics.median(data)) #part1
+mean = int(statistics.mean(data))
+```
 
 ### Day 8
 
