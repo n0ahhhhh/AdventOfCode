@@ -117,6 +117,12 @@ mean = int(statistics.mean(data))
 ```
 
 ### Day 8
+Programming is hard. Some takeaways:
+* SLOW DOWN.
+* THINK before you start coding. Write things down, make diagrams, get your thoughts in order FIRST.
+* It's okay to not have a beautiful, elegant solution right away.
+    
+I was stumped and resorted to reddit for my answer. After reading everyone else's solutions, I realized that sometimes it's okay to brute-force things.
 
 ### Day 9
 
