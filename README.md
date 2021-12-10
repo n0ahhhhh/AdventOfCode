@@ -125,8 +125,22 @@ Programming is hard. Some takeaways:
 I was stumped and resorted to reddit for my answer. After reading everyone else's solutions, I realized that sometimes it's okay to brute-force things.
 
 ### Day 9
+You can return tuples based on a condition:
+```python
+adjacent = [(y-1,x),(y+1,x),(y,x-1),(y,x+1)]
+    return [(a,b) for a,b in adjacent if 0 <= a < N and 0 <= b < M]
+```
 
+The `all` statement can check to see if multiple statements are true in a single line:
+```python
+if all(data[y][x] < data[a][b] for a,b in adjacents(y,x)):
+            lowpoints.append((y,x))
+```
+            
 ### Day 10
+Try and think about what steps you can skip or combine.
+I solved this puzzle on my own, but later saw other results that condensed my logic in a smarter way.
+E.g, use a `dict` to store the point values for `)]}>` instead of how I did it.
 
 ### Day 11
 
