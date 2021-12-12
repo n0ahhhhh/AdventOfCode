@@ -143,6 +143,21 @@ I solved this puzzle on my own, but later saw other results that condensed my lo
 E.g, use a `dict` to store the point values for `)]}>` instead of how I did it.
 
 ### Day 11
+`while` loops can help implement a sort of queue so you don't end in some recursion hell, e.g.:
+```python
+while something > 0:
+    do things
+        new_things_to_do_stuff_on = foo
+    something = new_things_to_do_stuff_on
+```
+
+`set()` is a helpful tool to keep track of and easily combine or compare information
+```python
+all_flashes = set(just_flashed)
+    ...
+    all_flashes = all_flashes.union(new_flashes)
+    just_flashed = new_flashes
+```
 
 ### Day 12
 
