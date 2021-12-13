@@ -160,8 +160,11 @@ all_flashes = set(just_flashed)
 ```
 
 ### Day 12
+Depth First Search (DFS) is helpful for finding paths and solving mazes. Understanding how it works is crucial.
+Honestly, this was one of the most confusing ones so far because I was still confused even after studying other people's answers closely.
 
 ### Day 13
+NumPy has some handy functions, i.e. `np.flipud` and `np.fliplr` which both made this one pretty straightforward.
 
 ### Day 14
 
