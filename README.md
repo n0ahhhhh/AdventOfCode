@@ -9,7 +9,7 @@ I'm Noah and here is my first GitHub repository. This is a multi-part project fo
 Thanks for reading!
 
 ## Lessons Learned
-### Day 1: [- Problem -](https://adventofcode.com/2021/day/1)
+### Day 1 - Sonar Sweep: [- Problem -](https://adventofcode.com/2021/day/1)
 The .zip() method takes multiple iterables and returns an iterator of tuples. Very handy!
 ```python
 list_1 = ['a', 'b', 'c']
@@ -26,7 +26,7 @@ List comprehension can dramatically reduce the amount of code needed for for-loo
 ans = sum(x < y for x, y in zip(depths, depths[1:]))
 ```
 
-### Day 2: [- Problem -](https://adventofcode.com/2021/day/2)
+### Day 2 - Dive!: [- Problem -](https://adventofcode.com/2021/day/2)
 The .rstrip() method removes any trailing characters from a string. Useful when reading in data:
 ```python
 #read in data and remove '\n' characters
@@ -39,7 +39,7 @@ The pandas.DataFrame.iterrows() method can iterate over DataFrame rows as an (in
 for index, r in directions.iterrows():
 ```
 
-### Day 3: [- Problem -](https://adventofcode.com/2021/day/3)
+### Day 3 - Binary Diagnostic: [- Problem -](https://adventofcode.com/2021/day/3)
 You can initialize mutltiple variables at the same time:
 ```python
 var1 = var 2 = var3 = 0
@@ -56,7 +56,7 @@ Using .iloc() to access specific values in a DataFrame:
 ogr = int(binary1.iloc[0]['ogr'], 2)
 ```
 
-### Day 4: [- Problem -](https://adventofcode.com/2021/day/4)
+### Day 4 - Giant Squid: [- Problem -](https://adventofcode.com/2021/day/4)
 When reading in data, it's best to chain several methods to save code:
 ```python
 #reads in data, strips whitespace and splits by newlines
@@ -75,7 +75,7 @@ for line in board:
         win = True
 ```
 
-### Day 5: [- Problem -](https://adventofcode.com/2021/day/5)
+### Day 5 - Hydrothermal Venture: [- Problem -](https://adventofcode.com/2021/day/5)
 Using the `with` label is a safer way of opening files:
 ```python
 #read in data
@@ -101,7 +101,7 @@ Using np.count_nonzero() to count nonzero values in an np.array with given condi
 np.count_nonzero(overlap > 1)
 ```
 
-### Day 6: [- Problem -](https://adventofcode.com/2021/day/6)
+### Day 6 - Lanternfish: [- Problem -](https://adventofcode.com/2021/day/6)
 `defaultdict` can be useful for counting (amongst other useful things)
 ```python
 ages = defaultdict(int)
@@ -109,14 +109,14 @@ for f in fish:
     ages[f] += 1
 ```
 
-### Day 7: [- Problem -](https://adventofcode.com/2021/day/7)
+### Day 7 - The Treachery of Whales: [- Problem -](https://adventofcode.com/2021/day/7)
 The `statistics` module has a lot of handy functions, like median.
 ```python
 median = int(statistics.median(data)) #part1
 mean = int(statistics.mean(data))
 ```
 
-### Day 8: [- Problem -](https://adventofcode.com/2021/day/8)
+### Day 8 - Seven Segment Search: [- Problem -](https://adventofcode.com/2021/day/8)
 Programming is hard. Some takeaways:
 * SLOW DOWN.
 * THINK before you start coding. Write things down, make diagrams, get your thoughts in order FIRST.
@@ -124,7 +124,7 @@ Programming is hard. Some takeaways:
     
 I was stumped and resorted to reddit for my answer. After reading everyone else's solutions, I realized that sometimes it's okay to brute-force things.
 
-### Day 9: [- Problem -](https://adventofcode.com/2021/day/9)
+### Day 9 - Smoke Basin: [- Problem -](https://adventofcode.com/2021/day/9)
 You can return tuples based on a condition:
 ```python
 adjacent = [(y-1,x),(y+1,x),(y,x-1),(y,x+1)]
@@ -137,12 +137,12 @@ if all(data[y][x] < data[a][b] for a,b in adjacents(y,x)):
             lowpoints.append((y,x))
 ```
             
-### Day 10: [- Problem -](https://adventofcode.com/2021/day/10)
+### Day 10 - Syntax Scoring: [- Problem -](https://adventofcode.com/2021/day/10)
 Try and think about what steps you can skip or combine.
 I solved this puzzle on my own, but later saw other results that condensed my logic in a smarter way.
 E.g, use a `dict` to store the point values for `)]}>` instead of how I did it.
 
-### Day 11: [- Problem -](https://adventofcode.com/2021/day/11)
+### Day 11 - Dumbo Octopus: [- Problem -](https://adventofcode.com/2021/day/11)
 `while` loops can help implement a sort of queue so you don't end in some recursion hell, e.g.:
 ```python
 while something > 0:
@@ -159,16 +159,27 @@ all_flashes = set(just_flashed)
     just_flashed = new_flashes
 ```
 
-### Day 12: [- Problem -](https://adventofcode.com/2021/day/12)
+### Day 12 - Passage Pathing: [- Problem -](https://adventofcode.com/2021/day/12)
 Depth First Search (DFS) is helpful for finding paths and solving mazes. Understanding how it works is crucial.
 Honestly, this was one of the most confusing ones so far because I was still confused even after studying other people's answers closely.
 
-### Day 13: [- Problem -](https://adventofcode.com/2021/day/13)
+### Day 13 - Transparent Origami: [- Problem -](https://adventofcode.com/2021/day/13)
 NumPy has some handy functions, i.e. `np.flipud` and `np.fliplr` which both made this one pretty straightforward.
 
-### Day 14: [- Problem -](https://adventofcode.com/2021/day/14)
+### Day 14 - Extended Polymerization: [- Problem -](https://adventofcode.com/2021/day/14)
+Read the problem *carefully*. You don't always need to calculate everything. Sometimes you just need to count!
+If you need to look at a pair of adjacent characters in a string, you can use the `zip()` function:
+```python
+for first, second in zip(template[:-1], template[1:]): #everything except last, everything except first
+        pair_counts[''.join((first, second))] += 1 #adds each pair from inital template to dict
+```
 
-### Day 15: [- Problem -](https://adventofcode.com/2021/day/15)
+### Day 15 - Chiton: [- Problem -](https://adventofcode.com/2021/day/15)
+Crash course on Dijkstra's Shortest Path algorithm. I had to rely on other people's answers for this puzzle because I simply didn't know how to implement the algorithm. I understand the concepts, but the actual syntax was confusing me.
+
+Also, it's very important when dealing with a grid to make sure you have the correct grid width and height when looking for any neighbors. That threw me off for a long time.
+
+Finally, understanding generators and how they work is going to be important. I *think* I understand it better now, but it's still confusing.
 
 ### Day 16: [- Problem -](https://adventofcode.com/2021/day/16)
 
