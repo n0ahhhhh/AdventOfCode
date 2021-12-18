@@ -42,7 +42,7 @@ Thumbs.db
 # IPython
 profile_default/
 ipython_config.py
-
+aoc_setup.ipynb
 
 # Python things
 *.py~
