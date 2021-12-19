@@ -181,11 +181,14 @@ Also, it's very important when dealing with a grid to make sure you have the cor
 
 Finally, understanding generators and how they work is going to be important. I *think* I understand it better now, but it's still confusing.
 
-## Day 16: [- Problem -](https://adventofcode.com/2021/day/16)
+## Day 16: Packet Decoder [- Problem -](https://adventofcode.com/2021/day/16)
+Once I figured out *how* to structure the data, this one became a lot of fun. I still didn't come up with the majority of the solution on my own, but that's precisely why I'm doing this - to learn. `dict()` are very useful for organizing stuff like packet header info! One thing I need to study up on is recursion. That still confuses me.
 
-## Day 17: [- Problem -](https://adventofcode.com/2021/day/17)
+## Day 17: Trick Shot [- Problem -](https://adventofcode.com/2021/day/17)
+A really cool problem, but another that I couldn't figure out 100% on my own. I had a lot of the skeleton in place, but there were a couple of smaller things that I didn't know how to do, like setting up the `while x <= x2+1 and y1-1 <= y:` loop. Other than that, this one felt fairly straightfoward.
 
-## Day 18: [- Problem -](https://adventofcode.com/2021/day/18)
+## Day 18: - Snailfish [- Problem -](https://adventofcode.com/2021/day/18)
+I had to concede to this puzzle. I just didn't know how to parse the information into something useful. I didn't know where to begin, or how to go about this puzzle at *all*. The result I put here came from Reddit. Even going through it line by line, I have a hard time understanding what it does. The past few days have been very hard for me because I'm neither familiar enough with commonly known algorithms or data structures, nor knowledgeable enough to apply them. BUT... *I am learning.* - and that was the whole point of this. :)
 
 ## Day 19: [- Problem -](https://adventofcode.com/2021/day/19)
 
