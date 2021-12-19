@@ -123,7 +123,7 @@ URL       = 'https://adventofcode.com/{:d}/day/{:d}{:s}'
 SESSION   = ''
 YEAR      = -1
 DAY       = -1
-CACHE_DIR = r'C:\Users\admin\Documents\My Python Projects\Advent of Code\{:d}\Day {:02d}{:s}'
+CACHE_DIR = r'..\Advent of Code\{:d}\Day {:02d}{:s}'
 REQUESTS  = find_spec('requests')
 
 if REQUESTS:
