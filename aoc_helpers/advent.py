@@ -53,8 +53,8 @@ def setup(year, day):
     YEAR = year
     DAY  = day
 
-    if REQUESTS and os.path.isfile('secret_session_cookie'):
-        with open('secret_session_cookie') as f:
+    if REQUESTS and os.path.isfile('..\secret_session_cookie'):
+        with open('..\secret_session_cookie') as f:
             SESSION = f.read().rstrip()
             S.cookies.set('session', SESSION)
 
@@ -123,7 +123,7 @@ URL       = 'https://adventofcode.com/{:d}/day/{:d}{:s}'
 SESSION   = ''
 YEAR      = -1
 DAY       = -1
-CACHE_DIR = r'..\Day {:02d}{:s}'
+CACHE_DIR = r'..\{:d}\Day {:02d}{:s}'
 REQUESTS  = find_spec('requests')
 
 if REQUESTS:
