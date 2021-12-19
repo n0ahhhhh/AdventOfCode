@@ -50,3 +50,6 @@ aoc_setup.ipynb
 setup.py
 *.egg-info
 __pycache__
+
+# Random
+secret_session_cookie
