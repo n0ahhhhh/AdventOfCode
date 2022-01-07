@@ -64,13 +64,14 @@ def get_input(fname=None, mode='r'):
     check_setup_once()
     
     #gets the title of the puzzle
-    pr = S.get(URL.format(YEAR,DAY,''))
-    check_or_die(pr)
-    soup = BeautifulSoup(pr.text, 'html.parser')
-    title = re.findall('(?<=:\s).*(?=\s-)', soup.h2.text)[0]
-    title = ' - ' + title
+#     pr = S.get(URL.format(YEAR,DAY,''))
+#     check_or_die(pr)
+#     soup = BeautifulSoup(pr.text, 'html.parser')
+#     title = re.findall('(?<=:\s).*(?=\s-)', soup.h2.text)[0]
+#     title = ' - ' + title
 
-    CACHE_DIR = CACHE_DIR.format(YEAR,DAY,title)
+#     CACHE_DIR = CACHE_DIR.format(YEAR, DAY, title)
+    CACHE_DIR = CACHE_DIR.format(YEAR)
 
     if fname is not None:
         return open(fname, mode)
@@ -123,7 +124,8 @@ URL       = 'https://adventofcode.com/{:d}/day/{:d}{:s}'
 SESSION   = ''
 YEAR      = -1
 DAY       = -1
-CACHE_DIR = r'..\{:d}\Day {:02d}{:s}'
+# CACHE_DIR = r'..\{:d}\Day {:02d}{:s}'
+CACHE_DIR = r'..\{:d}\inputs'
 REQUESTS  = find_spec('requests')
 
 if REQUESTS:
