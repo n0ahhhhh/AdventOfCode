@@ -1,7 +1,7 @@
 # Advent of Code 2022 Walkthrough
 
 ## Table of Contents
-* [Day 01 - Calorie Counting](https://github.com/noah-kg/AdventOfCode/new/main/2022#day-01---calorie-counting)
+* [Day 01 - Calorie Counting](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-01---calorie-counting)
 
 ## Day 01 - Calorie Counting
 [Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day%2001%20-%20Calorie%20Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
