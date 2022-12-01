@@ -58,3 +58,5 @@ secret_session_cookie
 #AoC nonsense
 2019/
 2020/
+aoc_helpers/intcodeVM.py
+2021/setup.ipynb
