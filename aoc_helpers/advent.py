@@ -45,7 +45,7 @@ def setup(year, day):
     global YEAR
     global DAY
     global SESSION
-        
+    
     if not (year >= 2015 and 1 <= day <= 25):
         log('ERROR: invalid year and/or day set!\n')
         sys.exit(1)
@@ -53,25 +53,21 @@ def setup(year, day):
     YEAR = year
     DAY  = day
 
-    if REQUESTS and os.path.isfile('..\secret_session_cookie'):
-        with open('..\secret_session_cookie') as f:
+    if REQUESTS and os.path.isfile('..\..\secret_session_cookie'):
+        with open('..\..\secret_session_cookie') as f:
             SESSION = f.read().rstrip()
             S.cookies.set('session', SESSION)
 
 def get_input(fname=None, mode='r'):
     global CACHE_DIR
-    
     check_setup_once()
     
     #gets the title of the puzzle
-#     pr = S.get(URL.format(YEAR,DAY,''))
-#     check_or_die(pr)
-#     soup = BeautifulSoup(pr.text, 'html.parser')
-#     title = re.findall('(?<=:\s).*(?=\s-)', soup.h2.text)[0]
-#     title = ' - ' + title
-
-#     CACHE_DIR = CACHE_DIR.format(YEAR, DAY, title)
-    CACHE_DIR = CACHE_DIR.format(YEAR)
+    pr = S.get(URL.format(YEAR,DAY,'')[:-1])
+    check_or_die(pr)
+    soup = BeautifulSoup(pr.text, 'html.parser')
+    TITLE = re.findall('(?<=:\s).*(?=\s-)', soup.h2.text)[0]
+    TITLE = TITLE.replace(' ', '_')
 
     if fname is not None:
         return open(fname, mode)
@@ -86,15 +82,15 @@ def get_input(fname=None, mode='r'):
             sys.exit(1)
 
     log('Getting input for year {} day {}... ', YEAR, DAY)
-    fname = os.path.join(CACHE_DIR, 'day_{:02d}.txt'.format(DAY))
-
+    fname = os.path.join(CACHE_DIR, 'Day_{:02d}_{:s}.txt'.format(DAY, TITLE))
+    
     try:
         file = open(fname, mode)
         logcont('done (from disk).\n')
         return file
     except FileNotFoundError:
         pass
-
+    
     if not REQUESTS:
         logcont('err!\n')
         log('ERROR: cannot download input, no requests module installed!\n')
@@ -105,12 +101,11 @@ def get_input(fname=None, mode='r'):
         sys.exit(1)
 
     logcont('downloading... ')
-
-#     testurl = URL.format(YEAR, DAY, '/input')
-#     print('input:',testurl)
-    r = S.get(URL.format(YEAR, DAY, '/input'))
+    
+    #gets URL of puzzle input
+    r = S.get(URL.format(YEAR, DAY, 'input'))
     check_or_die(r)
-
+    
     with open(fname, 'wb') as f:
         f.write(r.content)
 
@@ -119,13 +114,62 @@ def get_input(fname=None, mode='r'):
 
     return file
 
+def print_answer(part, answer):
+	print('Part {}:'.format(part), answer)
+    
+def submit_answer(part, answer):
+	check_setup_once()
+
+	if not REQUESTS:
+		log('Cannot upload answer, no requests module installed!\n')
+		print_answer(part, answer)
+		return False
+
+	log('Submitting day {} part {} answer: {}\n', DAY, part, answer)
+
+	r = S.post(URL.format(YEAR, DAY, 'answer'), data={'level': part, 'answer': answer})
+	check_or_die(r)
+	t = r.text.lower()
+
+	if 'did you already complete it' in t:
+		log('Already completed or wrong day/part.\n')
+		return False
+
+	if "that's the right answer" in t:
+		matches = re.findall(r'rank\s+(\d+)', t)
+		if matches:
+			logcont('Right answer! Rank {}.\n', matches[0])
+		else:
+			log('Right answer!\n')
+
+		if DAY == 25 and part == 1:
+			log("It's Christmas! Automatically submitting second part in 5s...\n")
+			sleep(5)
+			S.post(URL.format(YEAR, 25, 'answer'), data={'level': 2, 'answer': 0})
+			logcont('done!\n')
+			log('Go check it out: https://adventofcode.com/{}/day/25#part2\n', YEAR)
+
+		return True
+
+	if 'you have to wait' in t:
+		matches = re.compile(r'you have ([\w ]+) left to wait').findall(t)
+
+		if matches:
+			log('Submitting too fast, {} left to wait.\n', matches[0])
+		else:
+			log('Submitting too fast, slow down!\n')
+
+		return False
+
+	log('Wrong answer :(\n')
+	return False
+
 # constants
-URL       = 'https://adventofcode.com/{:d}/day/{:d}{:s}'
+URL       = 'https://adventofcode.com/{:d}/day/{:d}/{:s}'
 SESSION   = ''
 YEAR      = -1
 DAY       = -1
-# CACHE_DIR = r'..\{:d}\Day {:02d}{:s}'
-CACHE_DIR = r'..\{:d}\inputs'
+CACHE_DIR = r'..\inputs'
 REQUESTS  = find_spec('requests')
 
 if REQUESTS:
