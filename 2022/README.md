@@ -2,6 +2,7 @@
 
 ## Table of Contents
 * [Day 01 - Calorie Counting](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-01---calorie-counting)
+* [Day 02 - Rock, Paper, Scissors](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-02---rock-paper-scissors)
 
 ## Day 01 - Calorie Counting
 [Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day%2001%20-%20Calorie%20Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
@@ -28,4 +29,61 @@ For part two we are told that instead of getting the elf with the most calories,
 ```python
 chunks.sort(key=sum, reverse=True)
 top3 = sum(map(sum, chunks[:3]))
+```
+
+## Day 02 - Rock, Paper, Scissors
+[Problem](https://adventofcode.com/2022/day/2) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_02_Rock_Paper_Scissors.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+
+### Part 1
+We are given a list of strings depicting rounds of the famous game Rock, Paper, Scissors. Each string is a combination of two letters: ```ABC``` for player one, and ```XYZ``` for player two (us). We don't quite know how to decode the list, but we do know the following: ```A = Rock```, ```B = Paper```, and ```C = Scissors```. Our initial assumption is to assume that ```XYZ``` is what we must play in order to win the round. There are 9 total combinations: ```AX```, ```AY```, ```AZ```, ```BX```, ..., ```CZ```, etc. Each combination has a unique score attached to it. The score is calculated based on two things: the shape we picked (the ```XYZ```) and the outcome of the round (win/lose/draw). A loss counts as ```0 points```, a draw counts as ```3 points```, and a win counts as ```6 points```. We can create a simple dictionary that has 9 keys representing the possible outcomes, with 9 values representing the scores.
+
+```python
+scores1 = {
+    'AX': 4, #1 + 3 # A (rock)     vs X (rock)     -> draw
+    'AY': 8, #2 + 6 # A (rock)     vs Y (paper)    -> win
+    'AZ': 3, #3 + 0 # A (rock)     vs Z (scissors) -> loss
+    'BX': 1, #1 + 0 # B (paper)    vs X (rock)     -> loss
+    'BY': 5, #2 + 3 # B (paper)    vs Y (paper)    -> draw
+    'BZ': 9, #3 + 6 # B (paper)    vs Z (scissors) -> win
+    'CX': 7, #1 + 6 # C (scissors) vs X (rock)     -> win
+    'CY': 2, #2 + 0 # C (scissors) vs Y (paper)    -> loss
+    'CZ': 6 #3 + 3  # C (scissors) vs Z (scissors) -> draw
+}
+```
+
+We can then loop through the list and add up each rounds respective scores to find the answer to part 1.
+
+```python
+ans1 = 0
+for line in lines:
+    a, b = line.strip().split()
+    ans1 += scores1[a+b]
+```
+
+### Part 2
+We are now informed that our initial assumption was incorrect, and that instead of ```XYZ``` needing to be the winning move, it now represents the desired outcome. ```X = lose```, ```Y = draw```, and ```Z = win```. We simply create a second dictionary with the updated scores, and we can calculate the answer to part 2 in the same loop used for part 1!
+
+```python
+scores2 = {
+    'AX': 3, #3 + 0  A (rock)     vs X (scissors) -> loss
+    'AY': 4, #1 + 3  A (rock)     vs Y (rock)     -> draw
+    'AZ': 8, #2 + 6  A (rock)     vs Z (paper)    -> win
+    'BX': 1, #1 + 0  B (paper)    vs X (rock)     -> loss
+    'BY': 5, #2 + 3  B (paper)    vs Y (paper)    -> draw
+    'BZ': 9, #3 + 6  B (paper)    vs Z (scissors) -> win
+    'CX': 2, #2 + 0  C (scissors) vs X (paper)    -> loss
+    'CY': 6, #3 + 3  C (scissors) vs X (scissors) -> draw
+    'CZ': 7  #1 + 6  C (scissors) vs X (rock)     -> win
+}
+
+lines = list(map(str.strip, fin))
+ans1 = ans2 = 0
+
+for line in lines:
+    a, b = line.strip().split()
+    ans1 += scores1[a+b]
+    ans2 += scores2[a+b]
+    
+advent.print_answer(1, ans1)
+advent.print_answer(2, ans2)
 ```
