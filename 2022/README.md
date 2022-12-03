@@ -3,6 +3,7 @@
 ## Table of Contents
 * [Day 01 - Calorie Counting](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-01---calorie-counting)
 * [Day 02 - Rock, Paper, Scissors](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-02---rock-paper-scissors)
+* [Day 03 - Rucksack Reorganization](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-03---rucksack-reorganization)
 
 ## Day 01 - Calorie Counting
 [Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day%2001%20-%20Calorie%20Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
@@ -89,7 +90,7 @@ advent.print_answer(2, ans2)
 ```
 
 ## Day 03 - Rucksack Reorganization
-[Problem](https://adventofcode.com/2022/day/3) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_03_Rucksack_Reogranization.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+[Problem](https://adventofcode.com/2022/day/3) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_03_Rucksack%20Reorganization.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
 
 ### Part 1
 We get a list of strings, where each string represents one elf's rucksack. The rucksack is divided into two even compartments, where elements of one compartment are (supposed to be) unique to that compartment. Unfortunately, the main packing elf made a mistake, and some items were put into both compartments by mistake. We have to identify the misplaced item (the one that shows up in both compartments) as well as assign a priority value to it. We then add all the values to get the answer for part 1.
