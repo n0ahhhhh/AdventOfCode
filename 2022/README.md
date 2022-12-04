@@ -7,7 +7,7 @@
 * [Day 04 - Camp Cleanup](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-04---camp-cleanup)
 
 ## Day 01 - Calorie Counting
-[Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day%2001%20-%20Calorie%20Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+[Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_01_Calorie_Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
 
 ### Part 1
 We are given a list of integers representing the amount of calories for each snack that each elf is carrying. Each elf's list of snacks is separated by a new line. We need to parse this list, separate it into "chunks" (one chunk would be a single elf's snacks), and return the value of the elf with the most calories.
@@ -91,7 +91,7 @@ advent.print_answer(2, ans2)
 ```
 
 ## Day 03 - Rucksack Reorganization
-[Problem](https://adventofcode.com/2022/day/3) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_03_Rucksack%20Reorganization.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+[Problem](https://adventofcode.com/2022/day/3) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_03_Rucksack_Reorganization.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
 
 ### Part 1
 We get a list of strings, where each string represents one elf's rucksack. The rucksack is divided into two even compartments, where elements of one compartment are (supposed to be) unique to that compartment. Unfortunately, the main packing elf made a mistake, and some items were put into both compartments by mistake. We have to identify the misplaced item (the one that shows up in both compartments) as well as assign a priority value to it. We then add all the values to get the answer for part 1.
@@ -140,7 +140,7 @@ advent.print_answer(1, ans1)
 advent.print_answer(2, ans2)
 ```
 ## Day 04 - Camp Cleanup
-[Problem](https://adventofcode.com/2022/day/4) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_04_Camp%20Cleanup.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+[Problem](https://adventofcode.com/2022/day/4) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_04_Camp_Cleanup.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
 
 ### Part 1
 Today we are given a list of pairs of section IDs for which each elf is responsible for cleaning. We need to figure out which pairs have a full overlap of section IDs. For example:
