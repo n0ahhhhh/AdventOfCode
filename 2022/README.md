@@ -4,6 +4,7 @@
 * [Day 01 - Calorie Counting](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-01---calorie-counting)
 * [Day 02 - Rock, Paper, Scissors](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-02---rock-paper-scissors)
 * [Day 03 - Rucksack Reorganization](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-03---rucksack-reorganization)
+* [Day 04 - Camp Cleanup](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-04---camp-cleanup)
 
 ## Day 01 - Calorie Counting
 [Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day%2001%20-%20Calorie%20Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
@@ -137,4 +138,65 @@ After that, the process is identical to part 1. We have to remember to increment
     
 advent.print_answer(1, ans1)
 advent.print_answer(2, ans2)
+```
+## Day 04 - Camp Cleanup
+[Problem](https://adventofcode.com/2022/day/4) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_04_Camp%20Cleanup.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+
+### Part 1
+Today we are given a list of pairs of section IDs for which each elf is responsible for cleaning. We need to figure out which pairs have a full overlap of section IDs. For example:
+
+```
+Given     Visually
+ 2-8      .2345678.
+ 3-7      ..34567..
+
+ 6        .....6...
+ 4-6      ...456...
+
+ 2-6      .23456...
+ 4-8      ...45678.
+```
+
+For part one we are only concerned about finding the number of assignment pairs where one range *fully* overlaps the other. In the above, it would be the first and second pairs.
+
+To start, we just need to parse the input and [split()](https://docs.python.org/3/library/stdtypes.html#str.split) it into appropriate pieces of data, while not forgetting to [map](https://docs.python.org/3/library/functions.html#map) the inputs to integers:
+
+```python
+for line in fin:
+    a, b   = line.strip().split(',')
+    a1, a2 = map(int, a.split('-'))
+    b1, b2 = map(int, b.split('-'))
+```
+
+Then we need to calculate the points where the two ranges overlap. We can compute the extremes of the overlap by simply calculating the maximum between the two range start values and the minimum between the two range end values. We can make good use out of the [min()](https://docs.python.org/3/library/functions.html#min) and [max()](https://docs.python.org/3/library/functions.html#max) functions here. 
+
+```python
+o1 = max(a1, b1)
+o2 = min(a2, b2)
+
+if o1 == a1 and o2 == a2 or o1 == b1 and o2 == b2:
+    full_overlap += 1
+    
+advent.print_answer(1, full_overlap)
+```
+
+### Part 2
+For part 2, we're tasked with finding out the number of range pairs that overlap paritally *or* fully. The number of pairs from part 1 will still count for part 2. We simply need to calculate partial overlaps. To do this, we can calculate the two extremes of the overlap calculated from part 1:
+
+```
+    a1|------------|a2     |            a1|--------|a2
+b1|---------|b2            |   b1|--|b2
+    o1|-----|o2            |        |o2 o1|
+      overlap (o2 >= o1)   |       no overlap (o2 < o1)
+```
+
+All of this simply means adding one check to our part 1 code, and since we know that a full overlap is a special case of a partial overlap, we can move the part 1 check inside the part 2 one like so:
+
+```python
+if o2 >= o1:
+    overlap +=1
+    if o1 == a1 and o2 == a2 or o1 == b1 and o2 == b2:
+        full_overlap += 1
+        
+advent.print_answer(2, overlap)
 ```
