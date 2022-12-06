@@ -5,6 +5,8 @@
 * [Day 02 - Rock, Paper, Scissors](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-02---rock-paper-scissors)
 * [Day 03 - Rucksack Reorganization](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-03---rucksack-reorganization)
 * [Day 04 - Camp Cleanup](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-04---camp-cleanup)
+* [Day 05 - Supply Stacks](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-05---supply-stacks)
+* [Day 06 - Tuning Trouble](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-06---tuning-trouble)
 
 ## Day 01 - Calorie Counting
 [Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_01_Calorie_Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
@@ -199,4 +201,118 @@ if o2 >= o1:
         full_overlap += 1
         
 advent.print_answer(2, overlap)
+```
+
+## Day 05 - Supply Stacks
+[Problem](https://adventofcode.com/2022/day/5) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_05_Supply_Stacks.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+
+### Part 1
+Today is the first puzzle (so far) where parsing the input is more difficult than the actual problem. In today's puzzle, we are simulating a giant crate-moving crane. We are given our initial state of crates:
+
+```
+            [M] [S] [S]            
+        [M] [N] [L] [T] [Q]        
+[G]     [P] [C] [F] [G] [T]        
+[B]     [J] [D] [P] [V] [F] [F]    
+[D]     [D] [G] [C] [Z] [H] [B] [G]
+[C] [G] [Q] [L] [N] [D] [M] [D] [Q]
+[P] [V] [S] [S] [B] [B] [Z] [M] [C]
+[R] [H] [N] [P] [J] [Q] [B] [C] [F]
+ 1   2   3   4   5   6   7   8   9
+ ```
+ 
+ After a line break we are also given a long list of instructions in the form ```move [n] from [i] to [j]```, like the following:
+ 
+ ```
+move 1 from 7 to 4
+move 3 from 4 to 7
+move 4 from 3 to 4
+```
+
+After executing all instructions, we need to combine the letters from each of the topmost crates in each stack. For example, if the above configuration was the outcome after all instructions, our answer would be ```GGMMSSQFG```. The easiest way of doing this is to effectively transpose each row of input, which would essentially give us the columns. The [zip()](https://docs.python.org/3/library/functions.html#zip) function, as well as an [unpacking operator](https://docs.python.org/3/tutorial/controlflow.html#unpacking-argument-lists) can make this much easier.
+
+```python
+inp = []
+
+for line in fin:
+    if line == '\n': #we stop at the line break
+        break
+    inp.append(line)
+```
+
+Then we use zip() to transpose the input. After transposing, we only need to take 1 from every 4 characters (the capital letter). Using the [modulo](https://docs.python.org/3.3/reference/expressions.html#binary-arithmetic-operations) operator makes this simple too. I won't go into too much detail about parsing this, because frankly it was really annoying.
+
+```python
+stacks = [None]
+moves = []
+
+cols = list(zip(*inp)) #transposes each column
+
+for i, col in enumerate(cols):
+    if i % 4 == 1:
+        stacks.append(''.join(col[:-1]).lstrip())
+        
+original = stacks[:] #create copy for part 2
+```
+
+We then need to parse the actual instructions, which is thankfully more straightforward than the previous bit since we only care about the numbers, not the words.
+
+```python
+for line in fin:
+    line = line.split()
+    moves.append((int(line[1]), int(line[3]), int(line[5])))
+```
+
+Basically, what we need to do is isolate the "chunk" of crates that we need to move, update the state of the stack it came from, and then update the stack where the chunk is going. Because part 2 is similar, I've already turned the code into a function.
+
+```python
+def move_crates(stacks, moves, rev=True):
+    for n, i, j in moves:
+        if rev: chunk = stacks[i][:n][::-1] #part1
+        else: chunk = stacks[i][:n]         #part2
+        stacks[i] = stacks[i][n:]           #updates source stack after removing top crate
+        stacks[j] = chunk + stacks[j]       #updates destination stack after adding crate
+    
+    return ''.join(s[0] for s in stacks[1:]) 
+    
+ans1 = move_crates(stacks, moves)
+advent.print_answer(1, ans1)
+```
+
+### Part 2
+For part 2 we learn that our crate-moving crane is actually capable of moving multiple boxes at the same time, as opposed to moving only one at a time. We now how to redo the instructions again using this new information. All that changes really, is how we define the "chunk" that gets moved. Previously, we needed to reverse it since each crate was moved individually. We no longer have to reverse it since all the crates get moved together. The important thing is to restore our stacks to their original state, which is why we made a copy earlier.
+
+```python
+stacks = original #restores from copy we made earlier
+ans2 = move_crates(stacks, moves, False)
+
+advent.print_answer(2, ans2)
+```
+
+## Day 06 - Tuning Trouble
+[Problem](https://adventofcode.com/2022/day/6) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_06_Tuning_Trouble.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+
+### Part 1
+We're given one very long string (which I have named ```buffer```) filled with seemingly random characters. Our goal is to find the ```start-of-packet``` message, which contains ```4``` unique characters. This is incredibly simple with the use of the ```set``` data structure, and a simple ```for loop```. All that we need to do is start and the first character ```i```, and create a set that goes to ```i + 4```. If the length of that set is equal to 4, we have found our message.
+
+```python
+for i in range(len(buffer) - 4):
+    if len(set(buffer[i:i+4])) == 4:
+        return i + 4 
+```
+
+### Part 2
+Part 2 is identical to part 1, except now instead of checking for a packet that is 4 unique characters long, we need to find a packet that is 14 characters long. Following the [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle, instead of repeating our code from part 1, we can turn it into a function instead. We can pass in the length of the message we're looking for as an argument.
+
+```python
+def find_marker(m_len):
+    for i in range(len(buffer) - (m_len)):
+        if len(set(buffer[i:i+m_len])) == m_len:
+            return i + m_len        
+        
+ans1 = find_marker(4)  #start-of-packet
+ans2 = find_marker(14) #start-of-message
+
+advent.print_answer(1, ans1)
+advent.print_answer(2, ans2)
 ```
