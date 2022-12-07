@@ -7,6 +7,7 @@
 * [Day 04 - Camp Cleanup](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-04---camp-cleanup)
 * [Day 05 - Supply Stacks](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-05---supply-stacks)
 * [Day 06 - Tuning Trouble](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-06---tuning-trouble)
+* [Day 07 - No Space Left On Device](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-07---no-space-left-on-device)
 
 ## Day 01 - Calorie Counting
 [Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_01_Calorie_Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
@@ -316,3 +317,110 @@ ans2 = find_marker(14) #start-of-message
 advent.print_answer(1, ans1)
 advent.print_answer(2, ans2)
 ```
+
+## Day 07 - No Space Left On Device
+[Problem](https://adventofcode.com/2022/day/6) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_07_No_Space_Left_On_Device.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+
+### Part 1
+Not going to lie, this was the hardest part so far. We need to find the sum of all directories whose size is < 100,000. Parsing the input into a sensible, logical file system isn't necessarily difficult, just confusing if you don't know where to start (hint: I did not know where to start, and had to look at other people's code). Essentially, we need to have two functions: 1) a function to parse the filesystem and create a data structure that we can manipulate. 2) A function that calculates the size of a given directory (technically a path).
+
+For the first part, we can describe our filesystem as a [tree](https://en.wikipedia.org/wiki/Tree_(data_structure)) structure, where our root node is ```/```. We can parse the input line by line and determine what the path of the current directory is. We will then store that path in a dictionary with the form ```{path: list_of_contents}```. For each line we must do the following:
+
+* If we encounter the ```cd``` (change directory) command, we will add a new component to the path. If the ```dir``` we ```cd``` into is ```..```, then we remove the last added component.
+* If we encounter the ```ls``` (list) command, we need to read each following line until we encounter another ```$``` command. Each line read in this section will be either one of two things: a subdirectory ```dir```, or ```<size> <filename>```. If it's a directory we can safely ignore it, but if it's a filesize, we need to add it to the list of contents for that specific directory.
+
+For this, two tools can help out tremendously: [defaultdict](https://docs.python.org/3/library/collections.html#collections.defaultdict) and [deque](https://docs.python.org/3/library/collections.html#collections.deque). A ```defaultdict``` comes in handy because we don't have to worry about a path not being in our dictionary already (```defaultdict``` gives every key a default value, in our case it will be a ```list```). A ```deque``` also helps process the input line by line while being able to peek at the next line without consuming it, since we want to stop parsing the output of the ```ls``` command whenever we encounter a line starting with ```$```. We can peek the first element of a deque with ```d[0]```, and consume it by popping it ```d.popleft()```.
+
+```python
+from collections import deque, defaultdict
+
+def parse_filesystem(fin):
+    lines = deque(fin)
+    fs    = defaultdict(list)
+    path  = ()
+    
+    while lines:
+        line = lines.popleft().split() #['$', 'cd', 'foo']
+        command = line[1] #'cd' or 'ls'
+        args    = line[2:] #dir name, file, or nothing
+        
+        if command == 'ls':
+            while lines and not lines[0].startswith('$'):
+                size = lines.popleft().split()[0]
+                if size == 'dir': #ignore if it's a directory
+                    continue
+                fs[path].append(int(size)) #adds file size to contents of path
+        else: #cd into different dir
+            if args[0] == '..':
+                path = path[:-1]
+            else:
+                new_path = path + (args[0],)
+                fs[path].append(new_path)
+                path = new_path
+    return fs
+    
+ffs = parse_filesystem(fin)
+```
+
+The result of the above is our filesystem, which would look something like this:
+
+```python
+fs = {
+    ()        : [('/',)]
+    ('/',)    : [1000, 699, ('/', 'a')]
+    ('/', 'a'): [100, 200]
+}
+```
+
+Ultimately, we now have a dictionary of all the paths in our filesystem, as well as their contents. Now we need our second function to go through and calculate the size of each path. We need to traverse our tree, and sum up and file sizes we find along the way. The simplest way is by doing a [depth-first search](https://en.wikipedia.org/wiki/Depth-first_search). We can also use this function recursively, to help simplify the process. Given a path, we are going to check each item in that path's contents (using our newly created dictionary) and check whether or not it's an ```int``` or a ```dir```. If it's an ```int```, we can add it to the total size. If it's not a file, we can call the function recursively to determine that subdireectory's size. 
+
+```python
+@lru_cache(maxsize=None)
+def directory_size(path):
+    size = 0
+
+    for subdir_or_size in fs[path]:
+        if isinstance(subdir_or_size, int):
+            size += subdir_or_size
+        else:
+            size += directory_size(subdir_or_size) #recursively calculates size
+
+    return size
+```
+That's the basic gist of it. We will iterate through each key of ```fs``` which represents every path to all the directories we have) and call the ```directory_size``` function on it - making sure to sum only those whose sizes are less than 100,000. You'll notice the decorator at the top of our second function. This is to help reduce the need of recalculating expensive functions multiple times. This is a topic referred to as [memoization](https://en.wikipedia.org/wiki/Memoization) - a concept that was absolutely brutal for me to wrap my head around last year (it still is, actually). Luckily, Python 3 already provides us with a decorator to implement memoization out of the box: [`functools.lru_cache`](https://docs.python.org/3/library/functools.html#functools.lru_cache).
+
+Regardless of how many times we call `directory_size()`, the calculation is only performed *once* for any given path on the first call and cached automatically by `lru_cache` to be reused for subsequent calls. We finally have enough to answer part 1:
+
+```python
+dir_size = 0
+for path in fs:
+    size = directory_size(path)
+    if size <= 100000:
+        dir_size += size
+        
+advent.print_answer(1, dir_size)
+```
+
+### Part 2
+
+Now we need to find a single directory to delete to free up some space on our device (hence the puzzle name). The total size of our device is `70000000`. The amount of space we need for the update is `30000000`. We're now tasked with finding the *smallest* directory we can delete to have at least `30000000` units of free space. This is a simple matter, as all the of the hard work is done already.
+
+```python
+dir_size = 0
+used = directory_size(('/',))
+free = 70000000 - used
+need = 30000000 - free
+min_size_to_free = used
+
+for path in fs:
+    size = directory_size(path)
+    if size <= 100000:
+        dir_size += size
+    if size >= need and size < min_size_to_free:
+        min_size_to_free = size
+        
+advent.print_answer(1, dir_size)
+advent.print_answer(2, min_size_to_free)
+```
+
+That was a rather involved puzzle, and I know it's only going to get worse. :)
