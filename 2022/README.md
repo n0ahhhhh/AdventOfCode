@@ -8,6 +8,7 @@
 * [Day 05 - Supply Stacks](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-05---supply-stacks)
 * [Day 06 - Tuning Trouble](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-06---tuning-trouble)
 * [Day 07 - No Space Left On Device](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-07---no-space-left-on-device)
+* [Day 08 - Treetop Tree House](https://github.com/noah-kg/AdventOfCode/blob/main/2022/README.md#day-08---treetop-tree-house)
 
 ## Day 01 - Calorie Counting
 [Problem](https://adventofcode.com/2022/day/1) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_01_Calorie_Counting.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
@@ -319,7 +320,7 @@ advent.print_answer(2, ans2)
 ```
 
 ## Day 07 - No Space Left On Device
-[Problem](https://adventofcode.com/2022/day/6) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_07_No_Space_Left_On_Device.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+[Problem](https://adventofcode.com/2022/day/7) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_07_No_Space_Left_On_Device.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
 
 ### Part 1
 Not going to lie, this was the hardest part so far. We need to find the sum of all directories whose size is < 100,000. Parsing the input into a sensible, logical file system isn't necessarily difficult, just confusing if you don't know where to start (hint: I did not know where to start, and had to look at other people's code). Essentially, we need to have two functions: 1) a function to parse the filesystem and create a data structure that we can manipulate. 2) A function that calculates the size of a given directory (technically a path).
@@ -424,3 +425,78 @@ advent.print_answer(2, min_size_to_free)
 ```
 
 That was a rather involved puzzle, and I know it's only going to get worse. :)
+
+## Day 08 - Treetop Tree House
+[Problem](https://adventofcode.com/2022/day/8) - [Solution](https://github.com/noah-kg/AdventOfCode/blob/main/2022/solutions/Day_08_Treetop_Tree_House.ipynb) - [Back to top](https://github.com/noah-kg/AdventOfCode/tree/main/2022#advent-of-code-2022-walkthrough)
+
+### Part 1
+We are (finally) given a grid of numbers representing the heights of trees. The elves want to bulid a secluded treehouse that is not visible from outside the grid. We need to calculate the total number of trees that are visible from outside of the grid. Our input is a bunch of strings, but we don't need to convert them to integers because we're still dealing with ASCII characters, and their byte values are ascending from 0 through 9.
+
+We read and split the input like so:
+
+```python
+trees = fin.read().split()
+```
+To check each tree, we'll need to traverse through our grid using two of our favorite [`for`](https://docs.python.org/3/tutorial/controlflow.html#for-statements) loops with the help of ['enumerate'](https://docs.python.org/3/library/functions.html?highlight=enumerate#enumerate). This will help us keep track of each row and column index.
+
+```python
+for r, row in enumerate(trees):
+    if r == 0 or r == maxr: #edges
+        continue
+        
+    for c, tree in enumerate(row):
+        if c == 0 or c == maxc: #edges
+            continue
+```
+
+Because we need to check if a tree is visible from all sides, we have to have 4 separate checks for each cardinal direction. Once we figure out one direction, the others are essentially the same. Checking east & west first is easiest however, because we're already looping through each column in the grid (we're going one row at a time, checking each tree from left to right, ignoring the edges because those trees are always visible). Using a simple [generator expression](https://peps.python.org/pep-0289/), we can compare the height of our current tree, to all trees before/after it.
+
+```python
+        west  = (tree > t for t in row[:c])                      #checks trees to the left
+        east  = (tree > t for t in row[c+1:])                    #checks trees to the right
+        north = (tree > trees[i][c] for i in range(r-1, -1, -1)) #checks trees directly above
+        south = (tree > trees[i][c] for i in range(r+1, H))      #checks trees directly below
+```
+
+Each one of those statements generates a True/False value if our current tree is taller than the other trees in that specific direction. We can then use the [`all()`](https://docs.python.org/3/library/functions.html#all) function to see if the tree is taller than *all* the other trees in that specific direction. We can then combine all four of our generator expressions with a simple `or` command to determine if the tree is visible at all.
+
+```python
+        if all(west) or all(east) or all(north) or all(south):
+            total_visible += 1
+            
+advent.print_answer(1, total_visible)
+```
+
+### Part 2
+Now the elves want to figure out the optimal building site for their tree house. Their goal is to see the most trees, so now we need to calculate a "scenic score", which is the product of each tree's "viewing distance" for all four directions. The viewing distance is the number of trees whose height is lower than the given tree. So we need to iterate through the trees again, and check each tree in all four directions to see whether or not it meets the criteria.
+
+Similar to part 1, once you figure out one direction, the other three are essentially the same process.
+
+```python
+for west in range(c-1, -1, -1):
+    if row[west] >= tree:
+        break
+
+for east in range(c+1, W):
+    if row[east] >= tree:
+        break
+
+for north in range(r-1, -1, -1):
+    if trees[north][c] >= tree:
+        break
+
+for south in range(r+1, H):
+    if trees[south][c] >= tree:
+        break
+```
+
+In our case, we are keeping track of the first tree that is *taller than or equal to* our current tree. We keep track of the index of the taller tree in the direction variable. After we calculate all four directions, we need to carefully calculate the score, remembering to get the difference between the current tree and the tall tree.
+
+```python
+score = (c-west) * (east-c) * (r-north) * (south-r)
+
+if score > hi_score:
+    hi_score = score
+    
+advent.print_answer(2, hi_score)
+```
